@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.DS_Store
+.idea/
+.vscode/
+*.log
+.pytest_cache/
+
+# evidence/ IS committed on purpose -- it's a required deliverable (Section 6.3 of
+# the brief: saved artifact + discovery/replay run logs). Only the transient
+# escalation pointer file is worth excluding.
+evidence/pending_intervention.json
+
+# The take-home brief itself -- not a submission deliverable, kept local only.
+Assignemnt pdf/

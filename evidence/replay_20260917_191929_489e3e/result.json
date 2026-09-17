@@ -1,0 +1,13 @@
+{
+  "status": "success",
+  "outcome_code": null,
+  "message": "goal reached; checkpoint verified",
+  "outputs": {
+    "confirmation_text": "Thank you for your order!"
+  },
+  "failed_step_id": null,
+  "expected": null,
+  "observed": null,
+  "evidence_dir": "/Users/udaykiranreddycheerla/computer-use-agent/evidence/replay_20260917_191929_489e3e",
+  "duration_ms": 12751
+}

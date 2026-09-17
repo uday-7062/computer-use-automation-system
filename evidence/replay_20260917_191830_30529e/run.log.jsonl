@@ -1,0 +1,31 @@
+{"ts": 1789687110.995235, "event": "run_started", "run_kind": "replay", "run_id": "replay_20260917_191830_30529e"}
+{"ts": 1789687110.995358, "event": "replay_started", "artifact_id": "add_item_to_cart_and_reach_checkout_review", "artifact_version": 1, "params": {"username": "standard_user", "password": "[REDACTED:sensitive_field]", "item_name": "Sauce Labs Backpack", "first_name": "Jane", "last_name": "Doe", "zip_code": "94107"}}
+{"ts": 1789687111.7118258, "event": "screenshot", "label": "start", "path": "evidence/replay_20260917_191830_30529e/screenshots/001_start.png"}
+{"ts": 1789687111.711963, "event": "step_started", "step_id": "s_c3a028", "action": "fill"}
+{"ts": 1789687112.9557602, "event": "step_completed", "step_id": "s_c3a028"}
+{"ts": 1789687112.956084, "event": "step_started", "step_id": "s_dc1d48", "action": "fill"}
+{"ts": 1789687114.180245, "event": "step_completed", "step_id": "s_dc1d48"}
+{"ts": 1789687114.18078, "event": "step_started", "step_id": "s_93019b", "action": "click"}
+{"ts": 1789687115.4280698, "event": "step_completed", "step_id": "s_93019b"}
+{"ts": 1789687115.428583, "event": "step_started", "step_id": "s_40b6e6", "action": "click"}
+{"ts": 1789687116.6512918, "event": "step_completed", "step_id": "s_40b6e6"}
+{"ts": 1789687116.651585, "event": "step_started", "step_id": "s_f703d8", "action": "click"}
+{"ts": 1789687117.87448, "event": "step_completed", "step_id": "s_f703d8"}
+{"ts": 1789687117.874888, "event": "step_started", "step_id": "s_f05dca", "action": "click"}
+{"ts": 1789687119.0977752, "event": "step_completed", "step_id": "s_f05dca"}
+{"ts": 1789687119.0983958, "event": "step_started", "step_id": "s_2418ef", "action": "fill"}
+{"ts": 1789687120.31836, "event": "step_completed", "step_id": "s_2418ef"}
+{"ts": 1789687120.318752, "event": "step_started", "step_id": "s_90e9d8", "action": "fill"}
+{"ts": 1789687121.5318642, "event": "step_completed", "step_id": "s_90e9d8"}
+{"ts": 1789687121.5325959, "event": "step_started", "step_id": "s_da3527", "action": "fill"}
+{"ts": 1789687122.747943, "event": "step_completed", "step_id": "s_da3527"}
+{"ts": 1789687122.748677, "event": "step_started", "step_id": "s_1a900e", "action": "click"}
+{"ts": 1789687123.9872398, "event": "step_completed", "step_id": "s_1a900e"}
+{"ts": 1789687123.987981, "event": "step_started", "step_id": "s_20ff91", "action": "extract"}
+{"ts": 1789687125.19948, "event": "step_completed", "step_id": "s_20ff91"}
+{"ts": 1789687125.200207, "event": "step_started", "step_id": "s_089845", "action": "extract"}
+{"ts": 1789687126.411096, "event": "step_completed", "step_id": "s_089845"}
+{"ts": 1789687126.4117079, "event": "step_started", "step_id": "s_d54a24", "action": "extract"}
+{"ts": 1789687127.622153, "event": "step_completed", "step_id": "s_d54a24"}
+{"ts": 1789687127.651702, "event": "screenshot", "label": "final", "path": "evidence/replay_20260917_191830_30529e/screenshots/002_final.png"}
+{"ts": 1789687127.6738172, "event": "replay_finished", "status": "success", "message": "goal reached; checkpoint verified"}

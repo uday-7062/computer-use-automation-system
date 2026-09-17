@@ -1,0 +1,66 @@
+# Explicit, configurable allowlist and risk policy. Loaded by src/guardrails.py.
+# The agent (discovery) and the replay engine both consult this before every action.
+
+allowed_domains:
+  - www.saucedemo.com
+  - saucedemo.com
+
+allowed_actions:
+  - navigate
+  - click
+  - fill
+  - select
+  - press_key
+  - wait_for
+  - extract
+
+# Any click whose target text matches one of these (case-insensitive substring)
+# is classified RISKY regardless of what the model/artifact says, and is handled
+# per `policy`. This is a defense-in-depth backstop independent of the artifact's
+# own declared risk_level.
+risky_click_text_patterns:
+  - pattern: "finish"
+    reason: "Places the order — final, state-mutating confirmation step."
+    policy: require_confirmation
+  - pattern: "place order"
+    reason: "Places the order — final, state-mutating confirmation step."
+    policy: require_confirmation
+  - pattern: "remove"
+    reason: "Removes an item/record — reversible here, but confirm to be safe."
+    policy: flag
+  - pattern: "delete"
+    reason: "Deletion is typically irreversible."
+    policy: block
+  - pattern: "logout"
+    reason: "Ends the session; low risk but disruptive mid-flow."
+    policy: flag
+
+max_steps: 40
+step_timeout_ms: 15000
+navigation_timeout_ms: 20000
+max_consecutive_failures_before_escalation: 3
+
+# Regexes run over every string before it is written to a log file, artifact,
+# or intervention request. Matches are replaced with "[REDACTED:<name>]".
+pii_redaction_patterns:
+  - name: ssn
+    regex: '\b\d{3}-\d{2}-\d{4}\b'
+  - name: credit_card
+    regex: '\b(?:\d[ -]*?){13,16}\b'
+  - name: email
+    regex: '[\w.+-]+@[\w-]+\.[\w.-]+'
+  - name: long_digit_sequence
+    regex: '\b\d{9,}\b'
+
+# Field/param names that are never written to disk in cleartext, even in the
+# "safe" evidence log. Matched case-insensitively against param/field names.
+never_log_field_names:
+  - password
+  - pass
+  - ssn
+  - account_number
+  - card_number
+  - cvv
+  - token
+  - secret
+  - api_key

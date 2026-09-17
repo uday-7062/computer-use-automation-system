@@ -1,0 +1,43 @@
+# Guardrail config used only by the offline test suite, pointed at the local
+# file:// fixture instead of the live target. urlparse('file:///...').hostname
+# is None, normalized to "" by Guardrails.check_domain, hence the "" entry.
+allowed_domains:
+  - ""
+  - "www.saucedemo.com"
+
+allowed_actions:
+  - navigate
+  - click
+  - fill
+  - select
+  - press_key
+  - wait_for
+  - extract
+
+risky_click_text_patterns:
+  - pattern: "delete"
+    reason: "Deletion is typically irreversible."
+    policy: block
+  - pattern: "finish"
+    reason: "Final confirmation step."
+    policy: require_confirmation
+
+max_steps: 20
+step_timeout_ms: 5000
+navigation_timeout_ms: 8000
+max_consecutive_failures_before_escalation: 3
+
+pii_redaction_patterns:
+  - name: ssn
+    regex: '\b\d{3}-\d{2}-\d{4}\b'
+  - name: credit_card
+    regex: '\b(?:\d[ -]*?){13,16}\b'
+  - name: email
+    regex: '[\w.+-]+@[\w-]+\.[\w.-]+'
+  - name: long_digit_sequence
+    regex: '\b\d{9,}\b'
+
+never_log_field_names:
+  - password
+  - ssn
+  - account_number

@@ -1,0 +1,384 @@
+{
+  "schema_version": "1.0",
+  "id": "checkout_finish_demo",
+  "version": 1,
+  "name": "[DEMO] Complete checkout and place order",
+  "description": "Escalation-mechanism demo only (see module docstring): logs in, adds an item, fills checkout info, and places the order via the irreversible Finish button. That final step is RISKY and requires human confirmation via the live-session handoff (src/escalation.py) before it is executed.",
+  "target": {
+    "base_url": "https://www.saucedemo.com/",
+    "allowed_domains": [
+      "www.saucedemo.com",
+      "saucedemo.com"
+    ],
+    "vendor_product": "Swag Labs demo e-commerce app (saucedemo)",
+    "surface": "web"
+  },
+  "params": [
+    {
+      "name": "username",
+      "type": "string",
+      "required": true,
+      "description": "Login username.",
+      "example": "standard_user",
+      "sensitive": false
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "required": true,
+      "description": "Login password.",
+      "example": "secret_sauce",
+      "sensitive": true
+    },
+    {
+      "name": "first_name",
+      "type": "string",
+      "required": true,
+      "description": "Shipping first name.",
+      "example": "Jane",
+      "sensitive": false
+    },
+    {
+      "name": "last_name",
+      "type": "string",
+      "required": true,
+      "description": "Shipping last name.",
+      "example": "Doe",
+      "sensitive": false
+    },
+    {
+      "name": "zip_code",
+      "type": "string",
+      "required": true,
+      "description": "Shipping zip.",
+      "example": "94107",
+      "sensitive": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "confirmation_text",
+      "type": "string",
+      "description": "Order confirmation banner text."
+    }
+  ],
+  "steps": [
+    {
+      "id": "fill_username",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"username\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": "{{username}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "fill_password",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"password\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": "{{password}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "click_login",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"login-button\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "add_to_cart",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"add-to-cart-sauce-labs-backpack\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "open_cart",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"shopping-cart-link\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "click_checkout",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"checkout\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "fill_first_name",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"firstName\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": "{{first_name}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "fill_last_name",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"lastName\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": "{{last_name}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "fill_zip",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"postalCode\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": "{{zip_code}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "click_continue",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"continue\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    },
+    {
+      "id": "click_finish",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"finish\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": "Finish"
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "risky",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Places the order -- irreversible on a real system. Gated by guardrails.yaml (risky_click_text_patterns: 'finish' -> require_confirmation) and, independently, by this step's own risk_level, so the replay engine escalates to a human before acting even if the click-text policy were ever loosened."
+    },
+    {
+      "id": "extract_confirmation",
+      "action": "extract",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"complete-header\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "text",
+            "value": "Thank you for your order!",
+            "frame_path": [],
+            "confidence": 0.6
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "value_template": null,
+      "extract_as": "confirmation_text",
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": null
+    }
+  ],
+  "checkpoint": {
+    "description": "Order confirmation page reached",
+    "locator": null,
+    "url_pattern": "checkout-complete\\.html",
+    "text_pattern": "Thank you for your order!",
+    "timeout_ms": 8000
+  },
+  "error_handlers": [
+    {
+      "code": "CHECKOUT_VALIDATION_ERROR",
+      "description": "A required checkout field (first name / last name / zip) was missing or invalid.",
+      "detect": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"error\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          }
+        ],
+        "element_role": null,
+        "element_label": null
+      },
+      "error_class": "business_outcome",
+      "recovery": "none",
+      "max_retries": 0
+    }
+  ],
+  "provenance": {
+    "discovery_run_id": "hand_authored_demo",
+    "model": "n/a (hand-authored)",
+    "created_at": 1789683481.9103339,
+    "goal": "demonstrate the RISKY-step human-confirmation replay path"
+  },
+  "review_status": "draft"
+}

@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "outcome_code": null,
+  "message": "Successfully reached the 'Checkout: Overview' page. Item price is '$29.99' and the order total is '$32.39'.",
+  "outputs": {},
+  "failed_step_id": null,
+  "expected": null,
+  "observed": "Total: $32.39",
+  "evidence_dir": "/Users/udaykiranreddycheerla/computer-use-agent/evidence/discovery_20260917_191711_e8791b",
+  "duration_ms": 56494
+}

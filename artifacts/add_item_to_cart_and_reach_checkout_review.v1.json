@@ -1,0 +1,678 @@
+{
+  "schema_version": "1.0",
+  "id": "add_item_to_cart_and_reach_checkout_review",
+  "version": 1,
+  "name": "Add item to cart and reach checkout review",
+  "description": "Logs in, adds a named product to the cart, fills the shipping/checkout-info form, and reaches the Checkout: Overview review page, returning the item price and order total.",
+  "target": {
+    "base_url": "https://www.saucedemo.com/",
+    "allowed_domains": [
+      "www.saucedemo.com",
+      "saucedemo.com"
+    ],
+    "vendor_product": "Swag Labs demo e-commerce app (saucedemo)",
+    "surface": "web"
+  },
+  "params": [
+    {
+      "name": "username",
+      "type": "string",
+      "required": true,
+      "description": "Login username.",
+      "example": "standard_user",
+      "sensitive": false
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "required": true,
+      "description": "Login password. Never written to logs/artifacts.",
+      "example": "secret_sauce",
+      "sensitive": true
+    },
+    {
+      "name": "item_name",
+      "type": "string",
+      "required": true,
+      "description": "Exact product name to add to the cart.",
+      "example": "Sauce Labs Backpack",
+      "sensitive": false
+    },
+    {
+      "name": "first_name",
+      "type": "string",
+      "required": true,
+      "description": "Shipping form first name.",
+      "example": "Jane",
+      "sensitive": false
+    },
+    {
+      "name": "last_name",
+      "type": "string",
+      "required": true,
+      "description": "Shipping form last name.",
+      "example": "Doe",
+      "sensitive": false
+    },
+    {
+      "name": "zip_code",
+      "type": "string",
+      "required": true,
+      "description": "Shipping form postal code.",
+      "example": "94107",
+      "sensitive": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "item_price",
+      "type": "string",
+      "description": "Listed price of the added item, e.g. '$29.99'."
+    },
+    {
+      "name": "order_total",
+      "type": "string",
+      "description": "Final total shown on the review page, e.g. 'Total: $32.39'."
+    }
+  ],
+  "steps": [
+    {
+      "id": "s_c3a028",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"username\"], [data-testid=\"username\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "textbox|Username",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#user-name",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,173.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "textbox",
+        "element_label": "Username"
+      },
+      "value_template": "{{username}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Enter the given username to log in as 'standard_user'. This is the specified input for the login process."
+    },
+    {
+      "id": "s_dc1d48",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"password\"], [data-testid=\"password\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "textbox|Password",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#password",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,227.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "textbox",
+        "element_label": "Password"
+      },
+      "value_template": "{{password}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Enter the given password to complete the login process. This is the specified password for 'standard_user'."
+    },
+    {
+      "id": "s_93019b",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"login-button\"], [data-testid=\"login-button\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "button|Login",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#login-button",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,326.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "button",
+        "element_label": "Login"
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Click the 'Login' button to submit the credentials and proceed to the product page."
+    },
+    {
+      "id": "s_40b6e6",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"add-to-cart-{{item_name|slug}}\"], [data-testid=\"add-to-cart-{{item_name|slug}}\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "css",
+            "value": "#add-to-cart-{{item_name|slug}}",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "500.0,356.0",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "button",
+        "element_label": "Add to cart"
+      },
+      "value_template": "{{item_name}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Click 'Add to cart' for 'Sauce Labs Backpack' because it matches the 'item_name' parameter and is the item to add to the shopping cart."
+    },
+    {
+      "id": "s_f703d8",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"shopping-cart-link\"], [data-testid=\"shopping-cart-link\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "button|Cart, 1 items",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "text",
+            "value": "Cart, 1 items",
+            "frame_path": [],
+            "confidence": 0.55
+          },
+          {
+            "kind": "css",
+            "value": "div > div > header > div:nth-of-type(1) > div:nth-of-type(3) > a",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "1240.0,30.0",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "button",
+        "element_label": "Cart, 1 items"
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Click the 'Cart' button to proceed to the shopping cart and view items added for checkout."
+    },
+    {
+      "id": "s_f05dca",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"checkout\"], [data-testid=\"checkout\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "button|Checkout",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "text",
+            "value": "Checkout",
+            "frame_path": [],
+            "confidence": 0.55
+          },
+          {
+            "kind": "css",
+            "value": "#checkout",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "1155.0,429.0",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "button",
+        "element_label": "Checkout"
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Click the 'Checkout' button to proceed to the checkout form where shipping information will be entered."
+    },
+    {
+      "id": "s_2418ef",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"firstName\"], [data-testid=\"firstName\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "textbox|First Name",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#first-name",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,274.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "textbox",
+        "element_label": "First Name"
+      },
+      "value_template": "{{first_name}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Fill the 'First Name' field with 'Jane' as required for checkout."
+    },
+    {
+      "id": "s_90e9d8",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"lastName\"], [data-testid=\"lastName\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "textbox|Last Name",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#last-name",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,328.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "textbox",
+        "element_label": "Last Name"
+      },
+      "value_template": "{{last_name}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Fill the 'Last Name' field with 'Doe' as required for checkout."
+    },
+    {
+      "id": "s_da3527",
+      "action": "fill",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"postalCode\"], [data-testid=\"postalCode\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "textbox|Zip/Postal Code",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#postal-code",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,382.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "textbox",
+        "element_label": "Zip/Postal Code"
+      },
+      "value_template": "{{zip_code}}",
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Fill the 'Zip/Postal Code' field with '94107' as required for checkout."
+    },
+    {
+      "id": "s_1a900e",
+      "action": "click",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"continue\"], [data-testid=\"continue\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "button|Continue",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "css",
+            "value": "#continue",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "1155.0,619.5",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "button",
+        "element_label": "Continue"
+      },
+      "value_template": null,
+      "extract_as": null,
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Click the 'Continue' button to proceed to the 'Checkout: Overview' page after filling in the required information."
+    },
+    {
+      "id": "s_20ff91",
+      "action": "extract",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"title\"], [data-testid=\"title\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "generic|Checkout: Your Information",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "text",
+            "value": "Checkout: Your Information",
+            "frame_path": [],
+            "confidence": 0.55
+          },
+          {
+            "kind": "css",
+            "value": "div > div > div > header > div:nth-of-type(2) > span",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "135.2,85.0",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "generic",
+        "element_label": "Checkout: Your Information"
+      },
+      "value_template": null,
+      "extract_as": "item_price",
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Extract the price of 'Sauce Labs Backpack' to capture the cost of the item for review purposes."
+    },
+    {
+      "id": "s_089845",
+      "action": "extract",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"inventory-item-price\"], [data-testid=\"inventory-item-price\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "generic|$29.99",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "text",
+            "value": "$29.99",
+            "frame_path": [],
+            "confidence": 0.55
+          },
+          {
+            "kind": "css",
+            "value": "div > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "126.0,310.0",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "generic",
+        "element_label": "$29.99"
+      },
+      "value_template": null,
+      "extract_as": "item_price",
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Extract the item's listed price as it clearly shows the price of 'Sauce Labs Backpack' on the checkout overview page."
+    },
+    {
+      "id": "s_d54a24",
+      "action": "extract",
+      "locator": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"total-label\"], [data-testid=\"total-label\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "role_name",
+            "value": "generic|Total: $32.39",
+            "frame_path": [],
+            "confidence": 0.75
+          },
+          {
+            "kind": "text",
+            "value": "Total: $32.39",
+            "frame_path": [],
+            "confidence": 0.55
+          },
+          {
+            "kind": "css",
+            "value": "div > div > div > div > div:nth-of-type(2) > div:nth-of-type(8)",
+            "frame_path": [],
+            "confidence": 0.35
+          },
+          {
+            "kind": "coordinates",
+            "value": "640.0,614.0",
+            "frame_path": [],
+            "confidence": 0.1
+          }
+        ],
+        "element_role": "generic",
+        "element_label": "Total: $32.39"
+      },
+      "value_template": null,
+      "extract_as": "order_total",
+      "extract_attr": "text",
+      "risk_level": "safe",
+      "post_condition": null,
+      "timeout_ms": 8000,
+      "notes": "Extract the 'Total' as it indicates the final amount for the order on the checkout overview page."
+    }
+  ],
+  "checkpoint": {
+    "description": "Reached '/checkout-step-two.html' (observed: 'Total: $32.39')",
+    "locator": null,
+    "url_pattern": "/checkout\\-step\\-two\\.html",
+    "text_pattern": null,
+    "timeout_ms": 8000
+  },
+  "error_handlers": [
+    {
+      "code": "CHECKOUT_VALIDATION_ERROR",
+      "description": "A required checkout field (first name / last name / zip) was missing or invalid.",
+      "detect": {
+        "tiers": [
+          {
+            "kind": "test_id",
+            "value": "[data-test=\"error\"]",
+            "frame_path": [],
+            "confidence": 0.95
+          },
+          {
+            "kind": "css",
+            "value": ".error-message-container h3",
+            "frame_path": [],
+            "confidence": 0.6
+          }
+        ],
+        "element_role": "alert",
+        "element_label": "checkout validation error banner"
+      },
+      "error_class": "business_outcome",
+      "recovery": "none",
+      "max_retries": 0
+    }
+  ],
+  "provenance": {
+    "discovery_run_id": "discovery_20260917_191711_e8791b",
+    "model": "gpt-4o",
+    "created_at": 1789687088.239208,
+    "goal": "Log in to Swag Labs with username 'standard_user' using the password given in the declared parameters below. Add the product named exactly 'Sauce Labs Backpack' to the cart. Go to the cart and click Checkout. On the 'Checkout: Your Information' form, fill First Name='Jane', Last Name='Doe', Zip/Postal Code='94107', then click Continue. You should land on the 'Checkout: Overview' page. Extract the item's listed price into output 'item_price' and the final 'Total: $X' line into output 'order_total'. Then finish -- do not click the final 'Finish' button, reaching the Overview/review page with both outputs extracted is the goal."
+  },
+  "review_status": "draft"
+}

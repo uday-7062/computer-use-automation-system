@@ -1,0 +1,7 @@
+{
+  "notes": "Operator reviewed the order summary (item + $32.39 total) on the live session and approved placing the order.",
+  "actions": [
+    {"cmd": "note", "text": "reviewed order summary on checkout overview page before approving"},
+    {"cmd": "click", "selector": "[data-test=\"finish\"]"}
+  ]
+}

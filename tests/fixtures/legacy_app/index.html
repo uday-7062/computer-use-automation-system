@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+  A deliberately "legacy" fixture for offline tests: table-based layout, no
+  data-test/data-testid/id hooks on the interactive controls, and one nested
+  iframe (standing in for a frameset panel). This exercises the ROLE_NAME /
+  TEXT / CSS fallback tiers and frame_path traversal in src/perception.py and
+  src/locator.py without any network dependency or API key -- it is what
+  tests/test_replay_engine.py and tests/test_perception_locator.py run against.
+-->
+<html lang="en">
+<head><meta charset="utf-8"><title>Member Lookup (Legacy Demo)</title></head>
+<body>
+<table>
+  <tr><td>
+    <div id="view-login">
+      <table>
+        <tr><td><label for="memberIdBox">Member ID</label></td>
+            <td><input type="text" name="memberId" id="memberIdBox"></td></tr>
+      </table>
+      <button onclick="lookup()">Look Up</button>
+    </div>
+
+    <div id="view-result" style="display:none">
+      <table>
+        <tr><td>Name</td><td><span id="nameCell"></span></td></tr>
+        <tr><td>Balance</td><td><span id="balanceCell"></span></td></tr>
+      </table>
+      <p>Balance: <span id="balanceText"></span></p>
+    </div>
+
+    <div id="view-error" style="display:none" role="alert">
+      <p id="errorText">Error: No member found with that ID</p>
+    </div>
+  </td></tr>
+</table>
+
+<iframe title="branch-panel" style="width:300px;height:120px;border:1px solid #ccc"
+        srcdoc="<button onclick=&quot;document.getElementById('hours').style.display='block'&quot;>Show Branch Hours</button><p id='hours' style='display:none'>Mon-Fri 9-5</p>">
+</iframe>
+
+<script>
+  const MEMBERS = { "12345": { name: "John Smith", balance: "$4,532.10" } };
+  function lookup() {
+    const id = document.getElementById('memberIdBox').value.trim();
+    const record = MEMBERS[id];
+    document.getElementById('view-login').style.display = 'none';
+    if (record) {
+      document.getElementById('nameCell').innerText = record.name;
+      document.getElementById('balanceCell').innerText = record.balance;
+      document.getElementById('balanceText').innerText = record.balance;
+      document.getElementById('view-result').style.display = 'block';
+    } else {
+      document.getElementById('view-error').style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
