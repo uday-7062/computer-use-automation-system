@@ -1,0 +1,11 @@
+{
+  "status": "hard_failure",
+  "outcome_code": null,
+  "message": "could not resolve target element for step 's_9eb57d'",
+  "outputs": {},
+  "failed_step_id": "s_9eb57d",
+  "expected": "Clicking 'Add to cart' for the Sauce Labs Backpack to follow the specified task of adding this item to the cart.",
+  "observed": "tried: ['test_id:[data-test=\"add-to-cart-nonexistent-product-xyz\"], [data-testid=\"add-to-cart-nonexistent-product-xyz\"]', 'css:#add-to-cart-nonexistent-product-xyz']",
+  "evidence_dir": "/Users/udaykiranreddycheerla/computer-use-agent/evidence/replay_20260918_000445_e52b40",
+  "duration_ms": 15741
+}

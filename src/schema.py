@@ -253,3 +253,34 @@ class InterventionRequest(BaseModel):
     resolution_notes: Optional[str] = None
     resumed_at: Optional[float] = None
     human_actions: list[str] = Field(default_factory=list)
+
+
+# --------------------------------------------------------------------------- #
+# Multi-run stability (stretch goal: confidence & approval)
+# --------------------------------------------------------------------------- #
+
+class StepTierUsage(BaseModel):
+    """How consistently the same locator tier resolved a step across N replay
+    runs -- a step that resolves via a different tier run-to-run is drifting or
+    flaky even if every individual run reported success."""
+
+    step_id: str
+    tier_counts: dict[str, int] = Field(
+        default_factory=dict, description="LocatorKind value -> number of runs it resolved via that tier."
+    )
+
+
+class StabilityReport(BaseModel):
+    """Produced by `python -m src.cli stability`; consumed by `approve` as the
+    evidence gate for flipping an artifact from draft to approved."""
+
+    artifact_id: str
+    artifact_version: int
+    runs: int
+    success_count: int
+    business_outcome_count: int
+    hard_failure_count: int
+    success_rate: float
+    step_tier_usage: list[StepTierUsage] = Field(default_factory=list)
+    run_evidence_dirs: list[str] = Field(default_factory=list)
+    created_at: float = Field(default_factory=time.time)

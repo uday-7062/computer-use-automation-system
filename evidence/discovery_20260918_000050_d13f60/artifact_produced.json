@@ -635,38 +635,12 @@
     "text_pattern": null,
     "timeout_ms": 8000
   },
-  "error_handlers": [
-    {
-      "code": "CHECKOUT_VALIDATION_ERROR",
-      "description": "A required checkout field (first name / last name / zip) was missing or invalid.",
-      "detect": {
-        "tiers": [
-          {
-            "kind": "test_id",
-            "value": "[data-test=\"error\"]",
-            "frame_path": [],
-            "confidence": 0.95
-          },
-          {
-            "kind": "css",
-            "value": ".error-message-container h3",
-            "frame_path": [],
-            "confidence": 0.6
-          }
-        ],
-        "element_role": "alert",
-        "element_label": "checkout validation error banner"
-      },
-      "error_class": "business_outcome",
-      "recovery": "none",
-      "max_retries": 0
-    }
-  ],
+  "error_handlers": [],
   "provenance": {
     "discovery_run_id": "discovery_20260918_000050_d13f60",
     "model": "gpt-4o",
     "created_at": 1789704117.427706,
     "goal": "Log in to Swag Labs with username 'standard_user' using the password given in the declared parameters below. Add the product named exactly 'Sauce Labs Backpack' to the cart. Go to the cart and click Checkout. On the 'Checkout: Your Information' form, fill First Name='Jane', Last Name='Doe', Zip/Postal Code='94107', then click Continue. You should land on the 'Checkout: Overview' page. In the order summary table on that page, extract the dollar amount shown directly under/beside the product's own name and image (e.g. '$29.99') into output 'item_price' -- this is a per-item price, NOT the page heading/title text and NOT the tax or total. Separately, extract the line that reads exactly 'Total: $X' (the grand total including tax, near the bottom of the page) into output 'order_total'. Then finish -- do not click the final 'Finish' button, reaching the Overview/review page with both correct outputs extracted is the goal."
   },
-  "review_status": "approved"
+  "review_status": "draft"
 }

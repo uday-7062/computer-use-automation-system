@@ -1,0 +1,15 @@
+{"ts": 1789704285.043083, "event": "run_started", "run_kind": "replay", "run_id": "replay_20260918_000445_e52b40"}
+{"ts": 1789704285.043218, "event": "replay_started", "artifact_id": "add_item_to_cart_and_reach_checkout_review", "artifact_version": 1, "params": {"username": "standard_user", "password": "[REDACTED:sensitive_field]", "item_name": "Nonexistent Product XYZ", "first_name": "Jane", "last_name": "Doe", "zip_code": "94107"}}
+{"ts": 1789704285.78572, "event": "screenshot", "label": "start", "path": "evidence/replay_20260918_000445_e52b40/screenshots/001_start.png"}
+{"ts": 1789704285.785852, "event": "step_started", "step_id": "s_9885f1", "action": "fill"}
+{"ts": 1789704285.7993221, "event": "locator_resolved", "step_id": "s_9885f1", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704287.01745, "event": "step_completed", "step_id": "s_9885f1"}
+{"ts": 1789704287.0179589, "event": "step_started", "step_id": "s_80350b", "action": "fill"}
+{"ts": 1789704287.02464, "event": "locator_resolved", "step_id": "s_80350b", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704288.253133, "event": "step_completed", "step_id": "s_80350b"}
+{"ts": 1789704288.2535648, "event": "step_started", "step_id": "s_5fe421", "action": "click"}
+{"ts": 1789704288.258327, "event": "locator_resolved", "step_id": "s_5fe421", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704289.486799, "event": "step_completed", "step_id": "s_5fe421"}
+{"ts": 1789704289.487082, "event": "step_started", "step_id": "s_9eb57d", "action": "click"}
+{"ts": 1789704300.7663229, "event": "screenshot", "label": "hard_failure", "path": "evidence/replay_20260918_000445_e52b40/screenshots/002_hard_failure.png"}
+{"ts": 1789704300.7844, "event": "replay_finished", "status": "hard_failure", "message": "could not resolve target element for step 's_9eb57d'"}

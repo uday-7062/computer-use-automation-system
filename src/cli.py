@@ -58,9 +58,12 @@ GOAL = (
     "Add the product named exactly '{item_name}' to the cart. Go to the cart and click Checkout. "
     "On the 'Checkout: Your Information' form, fill First Name='{first_name}', Last Name='{last_name}', "
     "Zip/Postal Code='{zip_code}', then click Continue. You should land on the 'Checkout: Overview' page. "
-    "Extract the item's listed price into output 'item_price' and the final 'Total: $X' line into output "
+    "In the order summary table on that page, extract the dollar amount shown directly under/beside the "
+    "product's own name and image (e.g. '$29.99') into output 'item_price' -- this is a per-item price, "
+    "NOT the page heading/title text and NOT the tax or total. Separately, extract the line that reads "
+    "exactly 'Total: $X' (the grand total including tax, near the bottom of the page) into output "
     "'order_total'. Then finish -- do not click the final 'Finish' button, reaching the Overview/review page "
-    "with both outputs extracted is the goal."
+    "with both correct outputs extracted is the goal."
 )
 
 
@@ -137,7 +140,8 @@ def cmd_replay(args: argparse.Namespace) -> None:
 
     evidence = EvidenceWriter("replay", guardrails)
     engine = ReplayEngine(artifact=artifact, guardrails=guardrails, headless=args.headless,
-                           auto_approve_risky=args.auto_approve_risky)
+                           auto_approve_risky=args.auto_approve_risky,
+                           require_approval=not args.allow_draft)
     result = engine.run(params, evidence)
 
     print(f"\nReplay result: {result.status.value}")
@@ -150,6 +154,88 @@ def cmd_replay(args: argparse.Namespace) -> None:
         print(f"  observed: {result.observed}")
     print(f"  evidence: {result.evidence_dir}")
     sys.exit(0 if result.status.value in ("success", "business_outcome") else 2)
+
+
+def cmd_stability(args: argparse.Namespace) -> None:
+    """Stretch goal: multi-run stability. Replays the artifact N times against
+    the same params and reports a success rate plus, per step, which locator
+    tier resolved on each run -- a step that resolves via a different tier
+    run-to-run is drifting even on runs that individually reported success."""
+    from collections import Counter
+    from .evidence import EvidenceWriter
+    from .schema import StabilityReport, StepTierUsage
+
+    artifact = Artifact.model_validate_json(Path(args.artifact).read_text())
+    guardrails = Guardrails()
+    params = dict(kv.split("=", 1) for kv in args.param)
+
+    statuses: list[str] = []
+    run_dirs: list[str] = []
+    tier_counts: dict[str, Counter] = {}
+
+    for i in range(args.runs):
+        print(f"[{i + 1}/{args.runs}] replaying {artifact.artifact_key()}...")
+        evidence = EvidenceWriter("replay", guardrails)
+        engine = ReplayEngine(artifact=artifact, guardrails=guardrails, headless=args.headless,
+                               require_approval=False)  # stability testing must be allowed to run drafts
+        result = engine.run(params, evidence)
+        statuses.append(result.status.value)
+        run_dirs.append(str(evidence.dir.relative_to(ROOT)))
+
+        for line in (evidence.dir / "run.log.jsonl").read_text().splitlines():
+            rec = json.loads(line)
+            if rec.get("event") == "locator_resolved":
+                tier_counts.setdefault(rec["step_id"], Counter())[rec["tier_kind"]] += 1
+
+    counts = Counter(statuses)
+    report = StabilityReport(
+        artifact_id=artifact.id, artifact_version=artifact.version, runs=args.runs,
+        success_count=counts.get("success", 0), business_outcome_count=counts.get("business_outcome", 0),
+        hard_failure_count=counts.get("hard_failure", 0),
+        success_rate=counts.get("success", 0) / args.runs,
+        step_tier_usage=[StepTierUsage(step_id=sid, tier_counts=dict(c)) for sid, c in tier_counts.items()],
+        run_evidence_dirs=run_dirs,
+    )
+
+    out_dir = ROOT / "evidence" / f"stability_{artifact.id}_{int(report.created_at)}"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    report_path = out_dir / "report.json"
+    report_path.write_text(report.model_dump_json(indent=2))
+
+    print(f"\nStability report ({args.runs} runs): {report.success_rate:.0%} success")
+    print(f"  success={report.success_count} business_outcome={report.business_outcome_count} hard_failure={report.hard_failure_count}")
+    for su in report.step_tier_usage:
+        flag = "  <- drift risk: more than one tier used" if len(su.tier_counts) > 1 else ""
+        print(f"  {su.step_id}: {su.tier_counts}{flag}")
+    print(f"  report saved to {report_path.relative_to(ROOT)}")
+
+
+def cmd_approve(args: argparse.Namespace) -> None:
+    """Stretch goal: confidence & approval. Flips review_status draft -> approved,
+    gated on a stability report meeting --min-success-rate, unless --force is
+    passed (an explicit, logged override for a human who reviewed it manually)."""
+    artifact_path = Path(args.artifact)
+    artifact = Artifact.model_validate_json(artifact_path.read_text())
+
+    if not args.force:
+        if not args.stability_report:
+            print("Refusing to approve: no --stability-report given (and --force not passed).")
+            print(f"Run `python -m src.cli stability {args.artifact} --param ... --runs N` first.")
+            sys.exit(1)
+        report = json.loads(Path(args.stability_report).read_text())
+        if report["artifact_id"] != artifact.id or report["artifact_version"] != artifact.version:
+            print(f"Refusing to approve: stability report is for {report['artifact_id']}.v{report['artifact_version']}, "
+                  f"not {artifact.artifact_key()}.")
+            sys.exit(1)
+        if report["success_rate"] < args.min_success_rate:
+            print(f"Refusing to approve: stability report success_rate={report['success_rate']:.0%} "
+                  f"is below --min-success-rate={args.min_success_rate:.0%}.")
+            sys.exit(1)
+        print(f"Stability check passed: {report['success_rate']:.0%} success over {report['runs']} runs.")
+
+    artifact.review_status = "approved"
+    artifact_path.write_text(artifact.model_dump_json(indent=2))
+    print(f"Approved: {artifact.artifact_key()} (review_status=approved). Unattended replay is now allowed.")
 
 
 def cmd_show(args: argparse.Namespace) -> None:
@@ -179,7 +265,24 @@ def main() -> None:
     r.add_argument("--headless", action="store_true", default=True)
     r.add_argument("--headed", dest="headless", action="store_false")
     r.add_argument("--auto-approve-risky", action="store_true")
+    r.add_argument("--allow-draft", action="store_true",
+                    help="Bypass the confidence/approval gate for a one-off supervised run of a draft artifact.")
     r.set_defaults(func=cmd_replay)
+
+    st = sub.add_parser("stability", help="Replay an artifact N times and report a success/flakiness signal.")
+    st.add_argument("artifact")
+    st.add_argument("--param", action="append", default=[], help="key=value, repeatable")
+    st.add_argument("--runs", type=int, default=5)
+    st.add_argument("--headless", action="store_true", default=True)
+    st.add_argument("--headed", dest="headless", action="store_false")
+    st.set_defaults(func=cmd_stability)
+
+    ap_ = sub.add_parser("approve", help="Flip an artifact's review_status draft -> approved.")
+    ap_.add_argument("artifact")
+    ap_.add_argument("--stability-report", default=None, help="Path to a report.json from `stability`.")
+    ap_.add_argument("--min-success-rate", type=float, default=1.0)
+    ap_.add_argument("--force", action="store_true", help="Approve without a stability report (manual review).")
+    ap_.set_defaults(func=cmd_approve)
 
     s = sub.add_parser("show", help="Pretty-print a saved artifact.")
     s.add_argument("artifact")

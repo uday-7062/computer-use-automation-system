@@ -1,0 +1,39 @@
+{"ts": 1789704267.126454, "event": "run_started", "run_kind": "replay", "run_id": "replay_20260918_000427_f3ab9a"}
+{"ts": 1789704267.126602, "event": "replay_started", "artifact_id": "add_item_to_cart_and_reach_checkout_review", "artifact_version": 1, "params": {"username": "standard_user", "password": "[REDACTED:sensitive_field]", "item_name": "Sauce Labs Backpack", "first_name": "", "last_name": "Doe", "zip_code": "94107"}}
+{"ts": 1789704267.937902, "event": "screenshot", "label": "start", "path": "evidence/replay_20260918_000427_f3ab9a/screenshots/001_start.png"}
+{"ts": 1789704267.938016, "event": "step_started", "step_id": "s_9885f1", "action": "fill"}
+{"ts": 1789704267.9513988, "event": "locator_resolved", "step_id": "s_9885f1", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704269.1688142, "event": "step_completed", "step_id": "s_9885f1"}
+{"ts": 1789704269.169253, "event": "step_started", "step_id": "s_80350b", "action": "fill"}
+{"ts": 1789704269.174502, "event": "locator_resolved", "step_id": "s_80350b", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704270.39496, "event": "step_completed", "step_id": "s_80350b"}
+{"ts": 1789704270.3951192, "event": "step_started", "step_id": "s_5fe421", "action": "click"}
+{"ts": 1789704270.397225, "event": "locator_resolved", "step_id": "s_5fe421", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704271.608088, "event": "step_completed", "step_id": "s_5fe421"}
+{"ts": 1789704271.608669, "event": "step_started", "step_id": "s_9eb57d", "action": "click"}
+{"ts": 1789704271.614624, "event": "locator_resolved", "step_id": "s_9eb57d", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704272.845291, "event": "step_completed", "step_id": "s_9eb57d"}
+{"ts": 1789704272.8462772, "event": "step_started", "step_id": "s_110b9a", "action": "click"}
+{"ts": 1789704272.8494852, "event": "locator_resolved", "step_id": "s_110b9a", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704274.083498, "event": "step_completed", "step_id": "s_110b9a"}
+{"ts": 1789704274.083936, "event": "step_started", "step_id": "s_23aeea", "action": "click"}
+{"ts": 1789704274.088544, "event": "locator_resolved", "step_id": "s_23aeea", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704275.307437, "event": "step_completed", "step_id": "s_23aeea"}
+{"ts": 1789704275.3076952, "event": "step_started", "step_id": "s_b5ae6a", "action": "click"}
+{"ts": 1789704275.3109891, "event": "locator_resolved", "step_id": "s_b5ae6a", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704276.522624, "event": "step_completed", "step_id": "s_b5ae6a"}
+{"ts": 1789704276.5232089, "event": "step_started", "step_id": "s_9d6267", "action": "fill"}
+{"ts": 1789704276.529717, "event": "locator_resolved", "step_id": "s_9d6267", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704277.7445078, "event": "step_completed", "step_id": "s_9d6267"}
+{"ts": 1789704277.745142, "event": "step_started", "step_id": "s_9e78b9", "action": "fill"}
+{"ts": 1789704277.7511559, "event": "locator_resolved", "step_id": "s_9e78b9", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704278.963594, "event": "step_completed", "step_id": "s_9e78b9"}
+{"ts": 1789704278.963861, "event": "step_started", "step_id": "s_fd16d8", "action": "fill"}
+{"ts": 1789704278.9668438, "event": "locator_resolved", "step_id": "s_fd16d8", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704280.173713, "event": "step_completed", "step_id": "s_fd16d8"}
+{"ts": 1789704280.174401, "event": "step_started", "step_id": "s_39f695", "action": "click"}
+{"ts": 1789704280.1790469, "event": "locator_resolved", "step_id": "s_39f695", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704280.2033548, "event": "error_handler_matched", "code": "CHECKOUT_VALIDATION_ERROR", "error_class": "business_outcome", "step_id": "s_39f695"}
+{"ts": 1789704280.2323892, "event": "screenshot", "label": "error_checkout_validation_error", "path": "evidence/replay_20260918_000427_f3ab9a/screenshots/002_error_checkout_validation_error.png"}
+{"ts": 1789704280.262593, "event": "screenshot", "label": "business_outcome", "path": "evidence/replay_20260918_000427_f3ab9a/screenshots/003_business_outcome.png"}
+{"ts": 1789704280.281507, "event": "replay_finished", "status": "business_outcome", "message": "A required checkout field (first name / last name / zip) was missing or invalid."}

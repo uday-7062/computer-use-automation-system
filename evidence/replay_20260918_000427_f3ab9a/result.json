@@ -1,0 +1,11 @@
+{
+  "status": "business_outcome",
+  "outcome_code": "CHECKOUT_VALIDATION_ERROR",
+  "message": "A required checkout field (first name / last name / zip) was missing or invalid.",
+  "outputs": {},
+  "failed_step_id": null,
+  "expected": null,
+  "observed": null,
+  "evidence_dir": "/Users/udaykiranreddycheerla/computer-use-agent/evidence/replay_20260918_000427_f3ab9a",
+  "duration_ms": 13154
+}

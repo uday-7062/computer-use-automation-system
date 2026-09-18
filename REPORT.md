@@ -127,9 +127,10 @@ gracefully instead of crashing when the world doesn't cooperate.
   instead of a generic timeout — see §3.
 - **`schema_version` + `Artifact.version` + `review_status`** (`draft`/`approved`)
   exist so a capability can be revised without breaking the contract silently, and
-  so unattended production replay can eventually be gated on human sign-off (I
-  didn't build the approval gate itself — see §7 — but the field is load-bearing
-  for it).
+  so unattended production replay is gated on human sign-off: `ReplayEngine.run()`
+  refuses a `draft` artifact by default, and `python -m src.cli approve` only
+  flips it to `approved` given a stability report meeting a minimum success rate
+  — see §3.
 - **`TargetApp.vendor_product`** is a separate field from `base_url` on purpose:
   see §4.
 
@@ -185,11 +186,60 @@ it's testing one specific invocation of it.
 of the brief), drift detection here is intentionally lightweight rather than a
 separate visual-diff subsystem: if the *top* locator tier stops resolving,
 `resolve()` automatically falls back to the next tier and *replay still succeeds*
-— which is itself a drift signal worth recording. I did not build a "confidence
-score" or flakiness tracker that would flag "this succeeded, but only on its 3rd
-tier" as needing review (listed as a stretch goal in the brief); the schema's
-per-tier `confidence` field exists to support exactly that a level up, and it's
-the natural next addition (§7).
+— which is itself a drift signal worth recording, not just absorbing silently.
+
+**Stretch goals: multi-run stability + confidence & approval.** These two are
+implemented together because they answer the same question from two angles: "is
+this capability reliable enough to trust." `python -m src.cli stability` replays
+an artifact N times against the same params and, for every step, aggregates
+*which locator tier resolved on each run* (via a new `locator_resolved` evidence
+event) into a `StabilityReport` — a step that succeeds every run but drifts
+between tiers is flagged even though every individual run looked fine.
+`python -m src.cli approve` then flips `Artifact.review_status: draft -> approved`,
+but only if a stability report for that exact `(artifact_id, version)` meets a
+minimum success rate (100% by default) — and `ReplayEngine.run()` now refuses to
+execute a `draft` artifact at all unless the caller explicitly passes
+`require_approval=False` (`--allow-draft` on the CLI) for a one-off supervised
+run. This is a real, load-bearing gate, not just a schema field: it's what
+"gate unattended replay on an approval state" from the brief's stretch-goal list
+actually means in this codebase (`evidence/stability_*/report.json`,
+`src/replay_engine.py`'s gate at the top of `run()`).
+
+**A stability report validates the *checkpoint*, not the *outputs*.** This
+limitation is worth stating plainly rather than glossing over, because I hit it
+for real: a discovery run can reach the correct final page (checkpoint passes)
+while having recorded an EXTRACT step that reads the wrong element — in one
+actual run here, `item_price` was extracted from the page's section heading
+("Checkout: Overview") instead of the product's price, because the goal text
+given to the model was ambiguous about which on-screen number counted as "the
+item's listed price." Five stability runs of that artifact would have reported
+100% success, because checkpoint-reaching and output-correctness are different
+properties, and `stability` only measures the first. I fixed the actual cause
+(tightened the discovery goal's wording to name the specific price, unambiguously,
+by its position relative to the product), not the symptom — a report can't
+sanity-check semantic correctness of an output it doesn't have a schema for
+beyond `type: string`, and pretending otherwise would be worse than documenting
+the gap. A more complete fix (not built here) would let `Output` declare a
+`value_pattern` the way `Checkpoint.text_pattern` does, so `stability` could
+reject a report where an output's value never looks like a price.
+
+**A second real bug caught by the *hard_failure* evidence specifically, not the
+success-path stability runs**: `_parameterize_locator` (§2) originally kept the
+COORDINATES tier as an unconditional last resort even for a parameterized click.
+Replaying `add_item_to_cart_and_reach_checkout_review` with an `item_name` that
+matches no real product should fail (no such element exists) — instead, every
+content-based tier correctly failed to resolve, fell through to COORDINATES,
+and that tier just clicked whatever pixel position was captured at discovery
+time (the originally-recorded product's button), reporting a clean `success`
+with that product's price. Wrong result, reported with total confidence. Fixed
+by dropping COORDINATES too whenever a locator is being parameterized by a
+click's target-selecting param — a pixel position checks no identity at all, so
+it is strictly less safe than even the ambiguous role/text tiers already
+excluded, not a legitimate fallback. Verified live: the same nonexistent-item
+replay now correctly returns `hard_failure` with the exact selectors it tried.
+Both of these are documented here instead of quietly fixed and hidden because
+they're the clearest evidence in this repo that testing against a live target
+finds classes of bugs a schema review alone would not.
 
 ## 4. Heterogeneity & multi-tenant
 
@@ -311,30 +361,38 @@ can't follow it there.
 **Limits.** The risky-pattern list is a curated, English-text-substring allowlist
 of *known* dangerous verbs — it will not catch a risky action phrased in a way
 that isn't in the list, and it's per-click, not a semantic understanding of
-consequence. A production version would want this tied to the artifact's declared
-risk at authoring/review time (`review_status`) with a human sign-off gate before
-`approved` capabilities can run unattended (stretch goal — see §7), rather than
-relying on text-pattern matching alone.
+consequence. `review_status` (§3) now backs a real gate on top of this (unattended
+replay refuses a `draft` artifact), but that gate checks provenance/track-record,
+not the click-text policy itself — the two are independent layers, deliberately,
+so a compromised or malformed artifact can't get itself "approved" its way past
+the live-page risky-click check.
 
 ## 7. Cuts
 
 Built thin-but-real for every core requirement; cut breadth, not requirements.
 What's missing, in order I'd build it next:
 
-1. **Confidence/approval gating** (`review_status: draft → approved`, gating
-   unattended replay on approval). The field exists in the schema; the gate logic
-   doesn't. Highest-value next step — it's what makes "replay in production without
-   a human watching" actually safe to turn on.
+1. **Output semantic validation** (§3) — a stability report currently proves the
+   *checkpoint* is reached reliably, not that every extracted output is
+   semantically sane. `Output` could grow an optional `value_pattern` (mirroring
+   `Checkpoint.text_pattern`) that `stability`/`approve` check per run, so
+   "reached the right page but extracted the wrong field" (a real bug hit and
+   fixed by hand here) would fail the gate automatically instead of needing a
+   human to eyeball outputs before approving. Highest-value next step now that
+   confidence/approval and stability are built.
 2. **Cross-tenant override layer** (§4) — designed, not built. I'd build the
    override-patch format and demonstrate one artifact applied to a second saucedemo
    look-alike (a locally hosted variant) before touching a second real vendor app.
-3. **Tier-usage aggregation across runs** for drift/flakiness signal — the raw data
-   is already in every `run.log.jsonl`; it just isn't rolled up yet.
-4. **Assisted fallback** (bounded, single-step LLM recovery on replay failure) —
+3. **Assisted fallback** (bounded, single-step LLM recovery on replay failure) —
    deliberately left out to keep replay's "no LLM in the decision loop" guarantee
    unambiguous for this submission; would be an explicit, separately-logged escape
    hatch, not a default.
-5. **Real operator UI** in place of `operator_cli.py` — out of scope per the brief;
+4. **Real operator UI** in place of `operator_cli.py` — out of scope per the brief;
    the control-transfer mechanism underneath it is what's real (§5).
-6. **Desktop/legacy-web surface implementations** — designed (§4), not built; the
+5. **Desktop/legacy-web surface implementations** — designed (§4), not built; the
    brief doesn't ask for them.
+
+**Stretch goals implemented:** multi-run stability + confidence & approval gating
+(§3) — chosen together because they compose (approval is gated on a stability
+report), and because building them surfaced two real bugs (§3) that the "happy
+path once" demo alone would never have caught.

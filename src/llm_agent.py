@@ -178,17 +178,29 @@ def _parameterize_locator(locator: Locator, param_name: str, param_value: str) -
     ambiguous across different param values (e.g. a generic "Add to cart" role
     name shared by every product) and is dropped rather than kept as a fallback
     that could silently resolve to the wrong element.
+
+    COORDINATES is dropped too, deliberately -- caught live in this repo's own
+    evidence: replaying with an item_name that matches no real product still
+    reported `success`, because every content-based tier correctly failed to
+    resolve, but the coordinates tier doesn't check identity at all and just
+    clicked whatever was sitting at that pixel (the originally-discovered
+    product), reporting success for the wrong item instead of surfacing a clean
+    hard_failure. A pixel position is exactly as ambiguous as a generic role/text
+    tier once the target is supposed to vary by parameter -- arguably worse,
+    since it performs no content check whatsoever. If nothing at all matched
+    (kept is empty), fall back to the untouched original tiers rather than an
+    empty locator, so this only fires as a true last resort.
     """
     slug = param_value.strip().lower().replace(" ", "-") if param_value else ""
     kept: list = []
     for t in locator.tiers:
+        if t.kind == LocatorKind.COORDINATES:
+            continue
         v = t.value
         if param_value and param_value in v:
             kept.append(t.model_copy(update={"value": v.replace(param_value, "{{" + param_name + "}}")}))
         elif slug and slug in v:
             kept.append(t.model_copy(update={"value": v.replace(slug, "{{" + param_name + "|slug}}")}))
-        elif t.kind == LocatorKind.COORDINATES:
-            kept.append(t)
     if not kept:
         kept = list(locator.tiers)
     return locator.model_copy(update={"tiers": kept})

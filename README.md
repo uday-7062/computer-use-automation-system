@@ -79,9 +79,40 @@ This logs in, adds the item to the cart, fills the checkout form, and stops at t
 `item_price` and `order_total` as outputs before finishing. Every observation,
 model tool call, and screenshot is written to `evidence/discovery_<timestamp>/`,
 and the resulting artifact is saved to
-`artifacts/add_item_to_cart_and_reach_checkout_review.v1.json`.
+`artifacts/add_item_to_cart_and_reach_checkout_review.v1.json` with
+`review_status: "draft"`.
 
-### 2. Replay — deterministic, no LLM
+### 2. Build confidence, then approve (stretch goal)
+
+A fresh (`draft`) artifact can't be replayed unattended — `python -m src.cli
+replay` refuses by default, to avoid running an unreviewed capability in
+production. Build a track record first:
+
+```bash
+python -m src.cli stability artifacts/add_item_to_cart_and_reach_checkout_review.v1.json \
+  --param username=standard_user --param password=secret_sauce \
+  --param item_name="Sauce Labs Backpack" \
+  --param first_name=Jane --param last_name=Doe --param zip_code=94107 \
+  --runs 5
+```
+
+Replays the artifact 5 times and reports a success rate plus, per step, which
+locator tier resolved on each run (a step that resolves via a different tier
+run-to-run is drifting even on runs that individually report success). Saves
+`evidence/stability_<id>_<ts>/report.json`. Then:
+
+```bash
+python -m src.cli approve artifacts/add_item_to_cart_and_reach_checkout_review.v1.json \
+  --stability-report evidence/stability_<id>_<ts>/report.json
+```
+
+Flips `review_status: draft -> approved` only if the report meets
+`--min-success-rate` (default 100%). From here on, `replay` runs without any
+extra flag. (A one-off supervised run of a draft artifact can bypass this with
+`replay ... --allow-draft`, used below for the escalation-demo artifact, which
+is intentionally never approved — see step 6.)
+
+### 3. Replay — deterministic, no LLM
 
 ```bash
 python -m src.cli replay artifacts/add_item_to_cart_and_reach_checkout_review.v1.json \
@@ -91,9 +122,11 @@ python -m src.cli replay artifacts/add_item_to_cart_and_reach_checkout_review.v1
 ```
 
 Prints a structured result (`success` / `business_outcome` / `hard_failure`) with
-outputs, and writes full evidence to `evidence/replay_<timestamp>/`.
+outputs, and writes full evidence to `evidence/replay_<timestamp>/`. Try a
+different `--param item_name=...` too (e.g. `"Sauce Labs Fleece Jacket"`) — the
+capability is genuinely parameterized, not hardcoded to what was recorded.
 
-### 3. Replay hitting a bad-input business outcome
+### 4. Replay hitting a bad-input business outcome
 
 ```bash
 python -m src.cli replay artifacts/add_item_to_cart_and_reach_checkout_review.v1.json \
@@ -107,10 +140,25 @@ the app's own `[data-test="error"]` banner via the artifact's `error_handlers` a
 returns `status=business_outcome, outcome_code=CHECKOUT_VALIDATION_ERROR` — a
 legitimate result the caller needs, not a crash. See REPORT.md §3.
 
-### 4. Human escalation / live-session handoff
+### 5. Replay hitting a genuine hard failure
 
 ```bash
-python -m src.cli replay artifacts/checkout_finish_demo.v1.json \
+python -m src.cli replay artifacts/add_item_to_cart_and_reach_checkout_review.v1.json \
+  --param username=standard_user --param password=secret_sauce \
+  --param item_name="Nonexistent Product XYZ" \
+  --param first_name=Jane --param last_name=Doe --param zip_code=94107
+```
+
+No such product exists, so every locator tier for the "Add to cart" click
+correctly fails to resolve, and replay reports `status=hard_failure` with the
+failed step, and what was expected vs. what was tried. See REPORT.md §3 for a
+real bug this caught during development (an earlier version silently clicked
+the *wrong* product instead of failing).
+
+### 6. Human escalation / live-session handoff
+
+```bash
+python -m src.cli replay artifacts/checkout_finish_demo.v1.json --allow-draft \
   --param username=standard_user --param password=secret_sauce \
   --param first_name=Jane --param last_name=Doe --param zip_code=94107
 ```
@@ -118,8 +166,10 @@ python -m src.cli replay artifacts/checkout_finish_demo.v1.json \
 `checkout_finish_demo.v1.json` is a small hand-authored artifact (see
 `scripts/build_escalation_demo_artifact.py`) that continues one step further than
 the main capability and clicks the irreversible "Finish" button — marked `RISKY`.
-The replay engine pauses, writes `evidence/<run>/intervention_request.json`, and
-prints the live CDP endpoint. In a second terminal:
+It's intentionally never approved (`--allow-draft` is required every time) since
+it exists purely to demonstrate the escalation mechanism, not as a production
+capability. The replay engine pauses, writes `evidence/<run>/intervention_request.json`,
+and prints the live CDP endpoint. In a second terminal:
 
 ```bash
 python operator_cli.py                      # interactive: type commands yourself, or

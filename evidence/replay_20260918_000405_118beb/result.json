@@ -1,0 +1,14 @@
+{
+  "status": "success",
+  "outcome_code": null,
+  "message": "goal reached; checkpoint verified",
+  "outputs": {
+    "item_price": "$49.99",
+    "order_total": "Total: $53.99"
+  },
+  "failed_step_id": null,
+  "expected": null,
+  "observed": null,
+  "evidence_dir": "/Users/udaykiranreddycheerla/computer-use-agent/evidence/replay_20260918_000405_118beb",
+  "duration_ms": 16835
+}

@@ -1,0 +1,97 @@
+{
+  "artifact_id": "add_item_to_cart_and_reach_checkout_review",
+  "artifact_version": 1,
+  "runs": 5,
+  "success_count": 5,
+  "business_outcome_count": 0,
+  "hard_failure_count": 0,
+  "success_rate": 1.0,
+  "step_tier_usage": [
+    {
+      "step_id": "s_9885f1",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_80350b",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_5fe421",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_9eb57d",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_110b9a",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_23aeea",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_b5ae6a",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_9d6267",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_9e78b9",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_fd16d8",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_39f695",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_3376d5",
+      "tier_counts": {
+        "test_id": 5
+      }
+    },
+    {
+      "step_id": "s_c15571",
+      "tier_counts": {
+        "test_id": 5
+      }
+    }
+  ],
+  "run_evidence_dirs": [
+    "evidence/replay_20260918_000210_6cf26a",
+    "evidence/replay_20260918_000227_5dc431",
+    "evidence/replay_20260918_000244_d032a0",
+    "evidence/replay_20260918_000300_a4ec2a",
+    "evidence/replay_20260918_000317_81aaf3"
+  ],
+  "created_at": 1789704214.1874108
+}

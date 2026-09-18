@@ -108,8 +108,27 @@ class ReplayEngine:
     auto_approve_risky: bool = False
     cdp_port: int = 9333
 
+    require_approval: bool = True
+
     def run(self, params: dict, evidence: EvidenceWriter) -> RunResult:
         start = time.time()
+
+        if self.require_approval and self.artifact.review_status != "approved":
+            result = RunResult(
+                status=RunStatus.HARD_FAILURE,
+                message=(
+                    f"artifact {self.artifact.artifact_key()!r} is in review_status="
+                    f"{self.artifact.review_status!r}, not 'approved'. Unattended replay is gated on "
+                    f"approval (stretch goal: confidence & approval) -- run `python -m src.cli stability` "
+                    f"to build a track record, then `python -m src.cli approve` once it's reliable, or "
+                    f"pass allow_draft=True / --allow-draft for a one-off supervised run."
+                ),
+                evidence_dir=str(evidence.dir),
+            )
+            evidence.log("blocked_unapproved_artifact", {"review_status": self.artifact.review_status})
+            evidence.write_result(result.model_dump(mode="json"))
+            return result
+
         missing = [p.name for p in self.artifact.params if p.required and p.name not in params]
         if missing:
             result = RunResult(
@@ -184,7 +203,7 @@ class ReplayEngine:
                 continue
 
             try:
-                self._execute_action(page, step, params, outputs)
+                self._execute_action(page, step, params, outputs, evidence)
             except LocatorResolutionError as exc:
                 self._check_error_handlers(page, step, evidence)  # may raise BusinessOutcome/HardFailure
                 raise HardFailure(
@@ -220,7 +239,7 @@ class ReplayEngine:
 
         return RunResult(status=RunStatus.SUCCESS, message="goal reached; checkpoint verified", outputs=outputs)
 
-    def _execute_action(self, page: Page, step: Step, params: dict, outputs: dict) -> None:
+    def _execute_action(self, page: Page, step: Step, params: dict, outputs: dict, evidence: EvidenceWriter) -> None:
         timeout = step.timeout_ms or self.guardrails.config.step_timeout_ms
         value = render_template(step.value_template, params)
 
@@ -233,6 +252,11 @@ class ReplayEngine:
         if step.locator is None:
             raise HardFailure(f"step {step.id!r} ({step.action.value}) has no locator", step.id)
         resolved = resolve(page, render_locator(step.locator, params), timeout_ms=timeout)
+        evidence.log("locator_resolved", {
+            "step_id": step.id,
+            "tier_kind": resolved.tier.kind.value,
+            "tier_confidence": resolved.tier.confidence,
+        })
 
         if step.action == ActionType.CLICK:
             text_for_risk = step.locator.element_label or ""

@@ -1,0 +1,44 @@
+{"ts": 1789704197.42385, "event": "run_started", "run_kind": "replay", "run_id": "replay_20260918_000317_81aaf3"}
+{"ts": 1789704197.423969, "event": "replay_started", "artifact_id": "add_item_to_cart_and_reach_checkout_review", "artifact_version": 1, "params": {"username": "standard_user", "password": "[REDACTED:sensitive_field]", "item_name": "Sauce Labs Backpack", "first_name": "Jane", "last_name": "Doe", "zip_code": "94107"}}
+{"ts": 1789704198.1587892, "event": "screenshot", "label": "start", "path": "evidence/replay_20260918_000317_81aaf3/screenshots/001_start.png"}
+{"ts": 1789704198.1589792, "event": "step_started", "step_id": "s_9885f1", "action": "fill"}
+{"ts": 1789704198.1756039, "event": "locator_resolved", "step_id": "s_9885f1", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704199.394639, "event": "step_completed", "step_id": "s_9885f1"}
+{"ts": 1789704199.395326, "event": "step_started", "step_id": "s_80350b", "action": "fill"}
+{"ts": 1789704199.4030778, "event": "locator_resolved", "step_id": "s_80350b", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704200.640172, "event": "step_completed", "step_id": "s_80350b"}
+{"ts": 1789704200.640946, "event": "step_started", "step_id": "s_5fe421", "action": "click"}
+{"ts": 1789704200.64661, "event": "locator_resolved", "step_id": "s_5fe421", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704201.8877409, "event": "step_completed", "step_id": "s_5fe421"}
+{"ts": 1789704201.888486, "event": "step_started", "step_id": "s_9eb57d", "action": "click"}
+{"ts": 1789704201.8945322, "event": "locator_resolved", "step_id": "s_9eb57d", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704203.111203, "event": "step_completed", "step_id": "s_9eb57d"}
+{"ts": 1789704203.111875, "event": "step_started", "step_id": "s_110b9a", "action": "click"}
+{"ts": 1789704203.118361, "event": "locator_resolved", "step_id": "s_110b9a", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704204.3440719, "event": "step_completed", "step_id": "s_110b9a"}
+{"ts": 1789704204.3446689, "event": "step_started", "step_id": "s_23aeea", "action": "click"}
+{"ts": 1789704204.3497012, "event": "locator_resolved", "step_id": "s_23aeea", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704205.576271, "event": "step_completed", "step_id": "s_23aeea"}
+{"ts": 1789704205.576952, "event": "step_started", "step_id": "s_b5ae6a", "action": "click"}
+{"ts": 1789704205.582057, "event": "locator_resolved", "step_id": "s_b5ae6a", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704206.810405, "event": "step_completed", "step_id": "s_b5ae6a"}
+{"ts": 1789704206.811109, "event": "step_started", "step_id": "s_9d6267", "action": "fill"}
+{"ts": 1789704206.816345, "event": "locator_resolved", "step_id": "s_9d6267", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704208.027633, "event": "step_completed", "step_id": "s_9d6267"}
+{"ts": 1789704208.028249, "event": "step_started", "step_id": "s_9e78b9", "action": "fill"}
+{"ts": 1789704208.0343978, "event": "locator_resolved", "step_id": "s_9e78b9", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704209.247102, "event": "step_completed", "step_id": "s_9e78b9"}
+{"ts": 1789704209.247492, "event": "step_started", "step_id": "s_fd16d8", "action": "fill"}
+{"ts": 1789704209.2516139, "event": "locator_resolved", "step_id": "s_fd16d8", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704210.461409, "event": "step_completed", "step_id": "s_fd16d8"}
+{"ts": 1789704210.462003, "event": "step_started", "step_id": "s_39f695", "action": "click"}
+{"ts": 1789704210.4667149, "event": "locator_resolved", "step_id": "s_39f695", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704211.706133, "event": "step_completed", "step_id": "s_39f695"}
+{"ts": 1789704211.7069051, "event": "step_started", "step_id": "s_3376d5", "action": "extract"}
+{"ts": 1789704211.712542, "event": "locator_resolved", "step_id": "s_3376d5", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704212.91852, "event": "step_completed", "step_id": "s_3376d5"}
+{"ts": 1789704212.91941, "event": "step_started", "step_id": "s_c15571", "action": "extract"}
+{"ts": 1789704212.9257128, "event": "locator_resolved", "step_id": "s_c15571", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704214.133006, "event": "step_completed", "step_id": "s_c15571"}
+{"ts": 1789704214.165133, "event": "screenshot", "label": "final", "path": "evidence/replay_20260918_000317_81aaf3/screenshots/002_final.png"}
+{"ts": 1789704214.18678, "event": "replay_finished", "status": "success", "message": "goal reached; checkpoint verified"}

@@ -1,0 +1,19 @@
+{
+  "id": "0463b42ed5",
+  "run_id": "replay_20260918_000506_b21f1f",
+  "capability_id": "checkout_finish_demo",
+  "goal": "Escalation-mechanism demo only (see module docstring): logs in, adds an item, fills checkout info, and places the order via the irreversible Finish button. That final step is RISKY and requires human confirmation via the live-session handoff (src/escalation.py) before it is executed.",
+  "step_id": "click_finish",
+  "reason": "step 'click_finish' is marked RISKY (Places the order -- irreversible on a real system. Gated by guardrails.yaml (risky_click_text_patterns: 'finish' -> require_confirmation) and, independently, by this step's own risk_level, so the replay engine escalates to a human before acting even if the click-text policy were ever loosened.); human confirmation/action required before proceeding",
+  "screenshot_path": "evidence/replay_20260918_000506_b21f1f/screenshots/002_before_escalation.png",
+  "context_excerpt": "https://www.saucedemo.com/checkout-step-two.html",
+  "cdp_endpoint": "http://127.0.0.1:9333",
+  "created_at": 1789704313.123134,
+  "status": "resolved",
+  "resolution_notes": "Operator reviewed the order summary (item + $32.39 total) on the live session and approved placing the order.",
+  "resumed_at": 1789704319.186286,
+  "human_actions": [
+    "note: reviewed order summary on checkout overview page before approving",
+    "click '[data-test=\"finish\"]'"
+  ]
+}

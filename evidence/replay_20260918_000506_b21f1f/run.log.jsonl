@@ -1,0 +1,44 @@
+{"ts": 1789704306.079638, "event": "run_started", "run_kind": "replay", "run_id": "replay_20260918_000506_b21f1f"}
+{"ts": 1789704306.07978, "event": "replay_started", "artifact_id": "checkout_finish_demo", "artifact_version": 1, "params": {"username": "standard_user", "password": "[REDACTED:sensitive_field]", "first_name": "Jane", "last_name": "Doe", "zip_code": "94107"}}
+{"ts": 1789704306.826451, "event": "screenshot", "label": "start", "path": "evidence/replay_20260918_000506_b21f1f/screenshots/001_start.png"}
+{"ts": 1789704306.8265579, "event": "step_started", "step_id": "fill_username", "action": "fill"}
+{"ts": 1789704306.838096, "event": "locator_resolved", "step_id": "fill_username", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704307.454004, "event": "step_completed", "step_id": "fill_username"}
+{"ts": 1789704307.454656, "event": "step_started", "step_id": "fill_password", "action": "fill"}
+{"ts": 1789704307.460636, "event": "locator_resolved", "step_id": "fill_password", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704308.088063, "event": "step_completed", "step_id": "fill_password"}
+{"ts": 1789704308.088752, "event": "step_started", "step_id": "click_login", "action": "click"}
+{"ts": 1789704308.094073, "event": "locator_resolved", "step_id": "click_login", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704308.727732, "event": "step_completed", "step_id": "click_login"}
+{"ts": 1789704308.7284522, "event": "step_started", "step_id": "add_to_cart", "action": "click"}
+{"ts": 1789704308.734111, "event": "locator_resolved", "step_id": "add_to_cart", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704309.357177, "event": "step_completed", "step_id": "add_to_cart"}
+{"ts": 1789704309.357867, "event": "step_started", "step_id": "open_cart", "action": "click"}
+{"ts": 1789704309.3626041, "event": "locator_resolved", "step_id": "open_cart", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704309.9863, "event": "step_completed", "step_id": "open_cart"}
+{"ts": 1789704309.987062, "event": "step_started", "step_id": "click_checkout", "action": "click"}
+{"ts": 1789704309.993072, "event": "locator_resolved", "step_id": "click_checkout", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704310.6232278, "event": "step_completed", "step_id": "click_checkout"}
+{"ts": 1789704310.623852, "event": "step_started", "step_id": "fill_first_name", "action": "fill"}
+{"ts": 1789704310.629026, "event": "locator_resolved", "step_id": "fill_first_name", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704311.246179, "event": "step_completed", "step_id": "fill_first_name"}
+{"ts": 1789704311.246773, "event": "step_started", "step_id": "fill_last_name", "action": "fill"}
+{"ts": 1789704311.2528389, "event": "locator_resolved", "step_id": "fill_last_name", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704311.8611982, "event": "step_completed", "step_id": "fill_last_name"}
+{"ts": 1789704311.861791, "event": "step_started", "step_id": "fill_zip", "action": "fill"}
+{"ts": 1789704311.8668969, "event": "locator_resolved", "step_id": "fill_zip", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704312.475011, "event": "step_completed", "step_id": "fill_zip"}
+{"ts": 1789704312.475292, "event": "step_started", "step_id": "click_continue", "action": "click"}
+{"ts": 1789704312.478941, "event": "locator_resolved", "step_id": "click_continue", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704313.102262, "event": "step_completed", "step_id": "click_continue"}
+{"ts": 1789704313.102592, "event": "step_started", "step_id": "click_finish", "action": "click"}
+{"ts": 1789704313.1230102, "event": "screenshot", "label": "before_escalation", "path": "evidence/replay_20260918_000506_b21f1f/screenshots/002_before_escalation.png"}
+{"ts": 1789704313.123429, "event": "escalation_raised", "reason": "step 'click_finish' is marked RISKY (Places the order -- irreversible on a real system. Gated by guardrails.yaml (risky_click_text_patterns: 'finish' -> require_confirmation) and, independently, by this step's own risk_level, so the replay engine escalates to a human before acting even if the click-text policy were ever loosened.); human confirmation/action required before proceeding", "step_id": "click_finish", "cdp_endpoint": "http://127.0.0.1:9333"}
+{"ts": 1789704319.186049, "event": "screenshot", "label": "after_handoff", "path": "evidence/replay_20260918_000506_b21f1f/screenshots/003_after_handoff.png"}
+{"ts": 1789704319.1865642, "event": "escalation_resolved", "resolution_notes": "Operator reviewed the order summary (item + $32.39 total) on the live session and approved placing the order.", "human_actions": ["note: reviewed order summary on checkout overview page before approving", "click '[data-test=\"finish\"]'"], "after_screenshot": "evidence/replay_20260918_000506_b21f1f/screenshots/003_after_handoff.png", "control": "automation"}
+{"ts": 1789704319.186829, "event": "step_confirmed_by_human", "step_id": "click_finish"}
+{"ts": 1789704319.18691, "event": "step_started", "step_id": "extract_confirmation", "action": "extract"}
+{"ts": 1789704319.189591, "event": "locator_resolved", "step_id": "extract_confirmation", "tier_kind": "test_id", "tier_confidence": 0.95}
+{"ts": 1789704319.790578, "event": "step_completed", "step_id": "extract_confirmation"}
+{"ts": 1789704319.810723, "event": "screenshot", "label": "final", "path": "evidence/replay_20260918_000506_b21f1f/screenshots/004_final.png"}
+{"ts": 1789704319.82965, "event": "replay_finished", "status": "success", "message": "goal reached; checkpoint verified"}
