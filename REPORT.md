@@ -271,13 +271,15 @@ checkout flow," not "this is tenant 42's instance of it." The design I'd build o
   checkout button `data-test=proceed` instead of `checkout`") stored separately
   from the base artifact, applied at load time — so 200 tenants on the same vendor
   product share one recorded flow plus N small diffs, not N full recordings.
-- **Drift detection**: since `resolve()` already reports *which tier* satisfied
-  each step, aggregating "tier index used" per tenant per capability over time is
-  a cheap, real signal — a tenant whose replays are quietly sliding from tier 0 to
-  tier 2 is drifting and due for review, before it fails outright. This is exactly
-  what the stretch goal "multi-run stability" would formalize; the raw signal
-  already exists in every `run.log.jsonl` (`error_handler_matched`/tier data), it
-  just isn't aggregated across runs yet.
+- **Drift detection**: this part is now actually built, single-tenant (§3) —
+  `python -m src.cli stability` aggregates *which tier* resolved each step across
+  N runs into a `StabilityReport`, so a step quietly sliding from `test_id` to
+  `css` is flagged even while every run still reports success. Extending it
+  per-tenant is a grouping change, not new instrumentation: key the same
+  aggregation by `(tenant_id, artifact_id, artifact_version)` instead of a single
+  run batch, and a tenant whose replays are sliding down the tier ranking is
+  visibly due for review before it fails outright — the signal `resolve()`
+  already emits per step doesn't change, only who it's rolled up by.
 - Canonicalization (`/item/12345` → `/item/:id`) is the same idea applied to
   `value_template`/URL patterns and would live in the same override layer.
 
